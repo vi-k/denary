@@ -1,7 +1,7 @@
 # Example
 
-Two things live here: a short tour of the package, and the bench the numbers
-in the [main README](../README.md) come from.
+Two things live here: a short tour of the package, and the bench the numbers in
+the [main README](../README.md) come from.
 
 ## The tour
 
@@ -9,9 +9,9 @@ in the [main README](../README.md) come from.
 dart run example/example.dart
 ```
 
-[`example.dart`](example.dart) walks through exact arithmetic, the four
-ways of dividing by three, a bill with tax split three ways, and the fast
-`int`-based family together with the bridge between the two.
+[`example.dart`](example.dart) walks through exact arithmetic, the four ways of
+dividing by three, a bill with tax split three ways, and the fast `int`-based
+family together with the bridge between the two.
 
 ## The bench
 
@@ -44,8 +44,7 @@ example/bin/benchmark.exe all --passes=2
 ### What it measures, and how
 
 Seven packages are compared on the same values: this one in both of its
-families,
-[decimal](https://pub.dev/packages/decimal),
+families, [decimal](https://pub.dev/packages/decimal),
 [fixed](https://pub.dev/packages/fixed),
 [big_decimal](https://pub.dev/packages/big_decimal),
 [decimal_type](https://pub.dev/packages/decimal_type),
@@ -58,18 +57,19 @@ A few rules keep the answers honest:
   compared against it before being timed: `OK`, `WARNING` when only trailing
   zeros differ, `ERROR` when the value itself does. An `ERROR` costs the row
   its number — the summary shows the mismatch where the time would have been.
-  One package is exempt on purpose: [big_double](https://pub.dev/packages/big_double)
-  is a floating-point type, so an inexact answer is its nature rather than its
-  defect, and it is timed all the same. It earns no mark for it — a wrong
-  answer never takes the `★★` below.
+  One package is exempt on purpose:
+  [big_double](https://pub.dev/packages/big_double) is a floating-point type,
+  so an inexact answer is its nature rather than its defect, and it is timed
+  all the same. It earns no mark for it — a wrong answer never takes the `★★`
+  below.
 - **A package that has no such operation shows `—`**, not an error. An absent
   method is not a defect, and nothing is made to look slow for the lack of one.
 - **`★` is the winner of the comparison** and everyone within 10 % of it.
   `ShortDecimal` and `big_double` stand outside that reckoning — int64 and
   floating point are not the same job as `BigInt` — and carry `★★` instead,
-  which marks a package that is faster than everyone inside the comparison.
-  The point of it is the absence: a row where `ShortDecimal` has no `★★` is a
-  row where int64 buys nothing. A wrong answer never earns the mark.
+  which marks a package that is faster than everyone inside the comparison. The
+  point of it is the absence: a row where `ShortDecimal` has no `★★` is a row
+  where int64 buys nothing. A wrong answer never earns the mark.
 - **A cache is not a faster algorithm, and `raw-view` does not let one
   answer.** The row is meant to be a first conversion and `repeat-view` every
   later one. A fresh object is not enough to keep the first honest: a package
@@ -83,8 +83,8 @@ A few rules keep the answers honest:
   the cursor comes back around. What the pool is worth is visible in the
   numbers — with it, that package's row went from 2.7 µs to 31.4, and the two
   packages it had been beating went back to winning.
-- **The whole pool is checked, not just the cycle that is timed.** The values
-  a check never looks at are the ones a package could get wrong unnoticed, so
+- **The whole pool is checked, not just the cycle that is timed.** The values a
+  check never looks at are the ones a package could get wrong unnoticed, so
   every value in the pool is converted once outside the measurement and
   compared against `plainString` in `lib/src/tests.dart` — a reference built
   from the same `(unscaled, scale)` pair every package is handed, borrowing no

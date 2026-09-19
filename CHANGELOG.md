@@ -36,12 +36,12 @@ under Changed.
 
 ### Compatibility
 
-- The SDK floor comes down from `^3.9.0` to `^3.6.0`, and `meta` from
-  `^1.17.0` to `^1.15.0`. Flutter takes `meta` out of its own SDK at an exact
-  version — 1.15.0 on Flutter 3.27, 1.16.0 on 3.29 — so the old constraint put
-  the real Flutter floor at 3.35 whatever the SDK range said. The package now
-  resolves on Flutter 3.27 and later. Nothing in it needed a language feature
-  newer than 3.6; the whole test suite runs on Dart 3.6.0.
+- The SDK floor comes down from `^3.9.0` to `^3.6.0`, and `meta` from `^1.17.0`
+  to `^1.15.0`. Flutter takes `meta` out of its own SDK at an exact version —
+  1.15.0 on Flutter 3.27, 1.16.0 on 3.29 — so the old constraint put the real
+  Flutter floor at 3.35 whatever the SDK range said. The package now resolves
+  on Flutter 3.27 and later. Nothing in it needed a language feature newer than
+  3.6; the whole test suite runs on Dart 3.6.0.
 
 ### Added
 
@@ -86,9 +86,9 @@ under Changed.
 - `movePointLeft` and `movePointRight` — the same thing as `>>` and `<<`,
   spelled out. `>>` moves the point left, which is easy to read the wrong way
   round.
-- Two narrow entry points beside the umbrella one: `package:denary/decimal.dart`
-  and `package:denary/short_decimal.dart`. Whoever needs one family no longer
-  carries the other.
+- Two narrow entry points beside the umbrella one:
+  `package:denary/decimal.dart` and `package:denary/short_decimal.dart`.
+  Whoever needs one family no longer carries the other.
 - `ShortDecimal` is annotated `vm:deeply-immutable`: the VM may share its
   instances between isolates. `Decimal` cannot be — a `BigInt` field is
   rejected by that annotation.
@@ -188,8 +188,8 @@ touched.
   `9223372036854775807` and `3` wrapped instead of moving its trailing zero
   into the scale. The same argument that fixed multiplication.
 - `pow` with a negative exponent answered differently for equal values: ten
-  held as `10 × 10^0` refused where the same ten held as `1 × 10^1` did not.
-  It works from the canonical form now.
+  held as `10 × 10^0` refused where the same ten held as `1 × 10^1` did not. It
+  works from the canonical form now.
 - `ShortDecimal.inverse` threw `ArgumentError` from the fraction factory where
   its own doc promises `UnsupportedError`.
 - Every int64 operation that aligns two scales raised a `RangeError` where the
@@ -222,8 +222,8 @@ touched.
   `toString` printed it as `0`: the BigInt family went looking for a power of
   ten past the million to answer nothing. Zero rounds to zero wherever the
   position is, and the two families agree again.
-- Dividing zero by a negative number gave `0.0` in the BigInt family and
-  `-0.0` in the int64 one. Both give `-0.0` now, as plain Dart does.
+- Dividing zero by a negative number gave `0.0` in the BigInt family and `-0.0`
+  in the int64 one. Both give `-0.0` now, as plain Dart does.
 - A divide exception could not be printed: `toString` built parts that throw on
   the very values that produced the exception.
 - `divideToFraction` truncated a ratio that has no fraction in int64 instead of
@@ -306,23 +306,24 @@ Addition and subtraction are a tenth faster on `Decimal`, and a fifth where the
 two scales already match: the alignment is written out in the operators instead
 of being taken from a helper that returned a record, and the record was an
 allocation on the shortest operation in the package. Division is several times
-faster, printing the same value twice costs almost nothing, `toDouble` no longer goes through a string, and rounding a quotient
-that has no finite decimal form — `divide(other, scaleOnInfinitePrecision: n)`
-— is about 1.6 times faster than it was, having stopped building an exact
-fraction only to divide it again, and then twice as fast again: where the
-divisor is coprime with ten, which is every division by three, the remainder of
-the rounding answers by itself whether there was a finite form to return
-instead, and the division that used to ask separately was half the cost of the
-operation. `divideOrNull` and `isDivisibleBy` are about 1.8 times faster on
-such a divisor for the same reason — a gcd that could not change the answer is
-no longer spent. `ShortDecimal.divide` with a digit count is twenty times
-faster: it folds both scales and the digits asked for into one power of ten
-instead of aligning the pair into a fraction and scaling that, which used to
-carry the arithmetic out of int64 and into `BigInt` on values that fit int64
-comfortably. The table in the
-README is a fresh run of the bench in `example/`, which was rebuilt for this
-release: it checks every answer before timing it, measures a series and reports
-the median, and no longer reports an absent method as a failure.
+faster, printing the same value twice costs almost nothing, `toDouble` no
+longer goes through a string, and rounding a quotient that has no finite
+decimal form — `divide(other, scaleOnInfinitePrecision: n)` — is about 1.6
+times faster than it was, having stopped building an exact fraction only to
+divide it again, and then twice as fast again: where the divisor is coprime
+with ten, which is every division by three, the remainder of the rounding
+answers by itself whether there was a finite form to return instead, and the
+division that used to ask separately was half the cost of the operation.
+`divideOrNull` and `isDivisibleBy` are about 1.8 times faster on such a divisor
+for the same reason — a gcd that could not change the answer is no longer
+spent. `ShortDecimal.divide` with a digit count is twenty times faster: it
+folds both scales and the digits asked for into one power of ten instead of
+aligning the pair into a fraction and scaling that, which used to carry the
+arithmetic out of int64 and into `BigInt` on values that fit int64 comfortably.
+The table in the README is a fresh run of the bench in `example/`, which was
+rebuilt for this release: it checks every answer before timing it, measures a
+series and reports the median, and no longer reports an absent method as a
+failure.
 
 ## 1.1.0-1.1.2
 

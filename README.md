@@ -123,8 +123,8 @@ hands over both at once.
 
 **Coming from JSON with numeric prices.** A `double` has lost what it lost
 before this package sees it, so there is no constructor taking one. What you
-almost always want is the shortest decimal that produces the same `double`,
-and that is what its `toString` already is:
+almost always want is the shortest decimal that produces the same `double`, and
+that is what its `toString` already is:
 
 ```dart
 const fromApi = 19.99;
@@ -147,9 +147,9 @@ that work with decimals.
 A wonderful package that works correctly with decimals. It exists since 2014
 and is constantly updated. In one of the latest updates (3.2.0), performance
 has been significantly improved. Before that, speed was the weak point of this
-package. This was one of the reasons why [denary](https://pub.dev/packages/denary)
-appeared, since I started writing it before 3.2.0. However, I would have
-written it anyway. More about it below.
+package. This was one of the reasons why
+[denary](https://pub.dev/packages/denary) appeared, since I started writing it
+before 3.2.0. However, I would have written it anyway. More about it below.
 
 #### [fixed](https://pub.dev/packages/fixed)
 
@@ -285,9 +285,9 @@ incomplete functionality (division) or use of `double` under the hood.
 
 [decimal](https://pub.dev/packages/decimal),
 [precise_decimal](https://pub.dev/packages/precise_decimal) and
-[denary](https://pub.dev/packages/denary)
-do not have the above division problems. No need to calculate `scale`
-yourself, and no `double` under the hood.
+[denary](https://pub.dev/packages/denary) do not have the above division
+problems. No need to calculate `scale` yourself, and no `double` under the
+hood.
 
 Numbers are read from strings — exponential notation included — and written
 back without losing anything on the way:
@@ -300,8 +300,8 @@ print(Decimal.parse('19.99').toStringAsFixed(4)); // 19.9900
 
 [decimal](https://pub.dev/packages/decimal) returns the result of a division as
 `Rational` ([rational](https://pub.dev/packages/rational)), since not every
-quotient can be represented by a decimal. But it can be easily converted
-to `Decimal`:
+quotient can be represented by a decimal. But it can be easily converted to
+`Decimal`:
 
 ```dart
 final a = Decimal.one;
@@ -396,8 +396,8 @@ final rational = Decimal.fromInt(1) / Decimal.fromInt(3) * Decimal.fromInt(9).to
 final decimal = rational.toDecimal(); // 3
 ```
 
-A package that works only with decimals will not be able to solve such
-an example so elegantly. Or you will have to resort to rounding and lose
+A package that works only with decimals will not be able to solve such an
+example so elegantly. Or you will have to resort to rounding and lose
 precision:
 
 ```
@@ -409,8 +409,8 @@ But you can use additional solutions for working with fractions, such as the
 [fraction](https://pub.dev/packages/fraction), or the already mentioned
 [rational](https://pub.dev/packages/rational).
 
-[denary](https://pub.dev/packages/denary) has its own
-`Fraction` class, which provides basic functions for working with fraction.
+[denary](https://pub.dev/packages/denary) has its own `Fraction` class, which
+provides basic functions for working with fraction.
 
 ```dart
 final a = Fraction(BigInt.from(1), BigInt.from(2));
@@ -428,8 +428,7 @@ print('($a) - ($b) = $f4 -> ${f4.round(6)}'); // (1/2) - (1/3) = 1/6 -> 0.166667
 ### Package performance
 
 The numbers below come from the bench in [`example/`](example) — what it does
-and why is in [`example/README.md`](example/README.md).
-The short of it:
+and why is in [`example/README.md`](example/README.md). The short of it:
 
 - every answer is checked before it is timed, so a wrong answer is never
   reported as a fast one;
@@ -466,11 +465,11 @@ Deps:   decimal 3.2.6, decimal_type 0.0.3, fixed 6.1.1, big_decimal 0.7.0,
 ```
 
 The two rightmost columns are this package: `Decimal` on `BigInt` and
-`ShortDecimal` on `int`. `ShortDecimal` stands outside the comparison — int64 is
-not the same job as `BigInt`, and it is in the table to show what that
+`ShortDecimal` on `int`. `ShortDecimal` stands outside the comparison — int64
+is not the same job as `BigInt`, and it is in the table to show what that
 difference buys. The bench also runs
-[big_double](https://pub.dev/packages/big_double), which is left out here: it is
-a floating-point type, and on most of these rows its answer is not the exact
+[big_double](https://pub.dev/packages/big_double), which is left out here: it
+is a floating-point type, and on most of these rows its answer is not the exact
 one.
 
 |                               |            decimal |        decimal_type |              fixed |       big_decimal |  precise_decimal |     Decimal | ShortDecimal |
@@ -522,34 +521,34 @@ stored integers without first bringing the scales together.
 column: it refuses with `Rounding necessary` instead of answering wrongly — but
 a refusal is not a result either, and it shows as `ERROR` all the same.
 
-`to-double-wide` is the one row where [decimal](https://pub.dev/packages/decimal)
-shows `ERROR`, and it deserves to be spelled out. Its values carry more
-significant digits than a `double` holds, so every one of them has to be
-rounded and the only question is whether it lands on the nearest one. The set
-was generated blind — not by hunting for values where somebody fails — and the
-expected answers were computed outside Dart by exact conversion. Of the twenty,
-`decimal` misses the nearest double on seven and `big_decimal` on seven as well;
-both divide one `double` by another, which rounds twice. Over 100 000 random
-values `decimal` and this package disagree on 33 815 of them, and on 300 of
-those disagreements checked against exact arithmetic, this package was right
-every time and `decimal` never.
+`to-double-wide` is the one row where
+[decimal](https://pub.dev/packages/decimal) shows `ERROR`, and it deserves to
+be spelled out. Its values carry more significant digits than a `double` holds,
+so every one of them has to be rounded and the only question is whether it
+lands on the nearest one. The set was generated blind — not by hunting for
+values where somebody fails — and the expected answers were computed outside
+Dart by exact conversion. Of the twenty, `decimal` misses the nearest double on
+seven and `big_decimal` on seven as well; both divide one `double` by another,
+which rounds twice. Over 100 000 random values `decimal` and this package
+disagree on 33 815 of them, and on 300 of those disagreements checked against
+exact arithmetic, this package was right every time and `decimal` never.
 
-That row is also where the fastest answers are the wrong ones:
-`big_decimal` finishes it in 0.8 µs and `decimal` in 2.4, against 2.3 here.
+That row is also where the fastest answers are the wrong ones: `big_decimal`
+finishes it in 0.8 µs and `decimal` in 2.4, against 2.3 here.
 
-Where a division is exact, the gap is not about `BigInt` against `int` but about
-what the algorithm can see. `divide-dirty` divides a product back by its own
-factors — every step exact, nothing about the numbers saying so in advance —
-and [decimal](https://pub.dev/packages/decimal) spends 341 times longer on it
-than this package.
+Where a division is exact, the gap is not about `BigInt` against `int` but
+about what the algorithm can see. `divide-dirty` divides a product back by its
+own factors — every step exact, nothing about the numbers saying so in
+advance — and [decimal](https://pub.dev/packages/decimal) spends 341 times
+longer on it than this package.
 
 `unrepresentable-divide` rounds a quotient that has no finite decimal form, and
 this package takes the row ahead of everyone in the comparison, with
-`ShortDecimal` nine times ahead of `Decimal` on top of that. `divide` returns the
-exact answer whenever the division does have a finite form, however many digits
-that takes, and it pays nothing to find out: when the divisor shares no prime
-factor with ten, a non-zero remainder from the rounding is itself the proof that
-no finite form exists, so the question is never asked separately.
+`ShortDecimal` nine times ahead of `Decimal` on top of that. `divide` returns
+the exact answer whenever the division does have a finite form, however many
+digits that takes, and it pays nothing to find out: when the divisor shares no
+prime factor with ten, a non-zero remainder from the rounding is itself the
+proof that no finite form exists, so the question is never asked separately.
 
 #### Description of benchmarks
 
@@ -566,7 +565,9 @@ complicated than multiplication.
 
 Multiplication of large numbers:
 
-123456789 * 123456789 * 123456789 * 123456789 * 123456789 * 123456789 * 123456789 * 123456789 * 123456789 * 123456789 = 822526259147102579504761143661535547764137892295514168093701699676416207799736601
+123456789 * 123456789 * 123456789 * 123456789 * 123456789 * 123456789 *
+123456789 * 123456789 * 123456789 * 123456789 =
+822526259147102579504761143661535547764137892295514168093701699676416207799736601
 
 A simple operation for decimal. It is impossible to make a mistake in it. There
 is no simpler operation.
@@ -575,7 +576,9 @@ is no simpler operation.
 
 Multiplication of small numbers:
 
-0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 = 0.0000000000000000000822526259147102579504761143661535547764137892295514168093701699676416207799736601
+0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 *
+0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 * 0.0123456789 =
+0.0000000000000000000822526259147102579504761143661535547764137892295514168093701699676416207799736601
 
 A simple operation, but not all packages are ready to handle numbers that have
 more than 20 decimal places.
@@ -584,7 +587,9 @@ more than 20 decimal places.
 
 Division of large numbers:
 
-822526259147102579504761143661535547764137892295514168093701699676416207799736601 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 = 1
+822526259147102579504761143661535547764137892295514168093701699676416207799736601
+/ 123456789 / 123456789 / 123456789 / 123456789 / 123456789 / 123456789 /
+123456789 / 123456789 / 123456789 / 123456789 = 1
 
 Division is not the strongest point of most packages. Even integers! Even the
 result of which is also an integer!
@@ -593,11 +598,12 @@ result of which is also an integer!
 
 Division of small numbers:
 
-1 / 256 / 256 / 256 / 256 / 256 / 256 / 256 / 256 / 256 = 0.000000000000000000000211758236813575084767080625169910490512847900390625
+1 / 256 / 256 / 256 / 256 / 256 / 256 / 256 / 256 / 256 =
+0.000000000000000000000211758236813575084767080625169910490512847900390625
 
-It's a difficult task. It's easy to stumble over. [decimal](https://pub.dev/packages/decimal)
-solves it, but at what cost! Some packages use the `double` trick and stumble
-over it. And some don't even try.
+It's a difficult task. It's easy to stumble over.
+[decimal](https://pub.dev/packages/decimal) solves it, but at what cost! Some
+packages use the `double` trick and stumble over it. And some don't even try.
 
 ##### divide-large-and-view and divide-small-and-view
 
@@ -645,8 +651,8 @@ This is usually a resource-intensive task, as the package does not have time to
 do any optimizations with the number.
 
 The values above are one cycle of it. The set is a pool a hundred cycles deep,
-walked in order, so every cycle converts values no cycle before it converted.
-A package is free to remember what it printed — that is what repeat-view
+walked in order, so every cycle converts values no cycle before it converted. A
+package is free to remember what it printed — that is what repeat-view
 measures — but this row may not be answered from that memory, and a fresh
 object is not enough to prevent it: a table keyed by the value rather than by
 the object answers a new object just the same. A pool larger than any cache in
@@ -655,8 +661,8 @@ alike.
 
 ##### raw-view-zeros
 
-Convert newly created numbers with lots of leading and trailing zeros into
-a readable format:
+Convert newly created numbers with lots of leading and trailing zeros into a
+readable format:
 
 - 100000000000000000000000000000000000000
 - 10000000000000000000000000000000000
@@ -697,9 +703,10 @@ not a faster algorithm.
 
 `Decimal` keeps the printed form; `ShortDecimal` does not, and cannot:
 `vm:deeply-immutable` admits only final non-late fields, so a cache filled on
-first use has nowhere to live. [decimal_type](https://pub.dev/packages/decimal_type),
-[fixed](https://pub.dev/packages/fixed) and [big_decimal](https://pub.dev/packages/big_decimal)
-keep nothing either.
+first use has nowhere to live.
+[decimal_type](https://pub.dev/packages/decimal_type),
+[fixed](https://pub.dev/packages/fixed) and
+[big_decimal](https://pub.dev/packages/big_decimal) keep nothing either.
 
 ##### repeat-view-zeros
 
@@ -714,7 +721,8 @@ best case for stripping zeros, for `gcd` and for the fast path of division.
 Money does not look like that.
 
 divide-dirty divides a product back by its own factors. Every division in it is
-exact, but nothing about the numbers says so in advance — only `gcd` can see it.
+exact, but nothing about the numbers says so in advance — only `gcd` can see
+it.
 
 ##### parse
 
@@ -730,13 +738,13 @@ is where the work our `parse` did not do comes back.
 ##### compare
 
 Comparing neighbours of the same magnitude but of different scales, so that the
-comparison cannot be settled by the exponent and has to bring the two numbers to
-a common scale first.
+comparison cannot be settled by the exponent and has to bring the two numbers
+to a common scale first.
 
 [fixed](https://pub.dev/packages/fixed) 6.1.1 shows `ERROR` here: its
-`compareTo` compares the stored integers without aligning the scales, so it puts
-0.5 below 0.49. The bench checks every answer before timing it, and a wrong
-answer is never reported as a fast one.
+`compareTo` compares the stored integers without aligning the scales, so it
+puts 0.5 below 0.49. The bench checks every answer before timing it, and a
+wrong answer is never reported as a fast one.
 
 ##### round
 
@@ -768,8 +776,9 @@ that formats money for a screen.
 Dividing by three: not one of the results has a finite decimal form, so every
 one of them has to be rounded to ten digits. This is the price of the total
 forms of division — `divide(other, scaleOnInfinitePrecision: 10)` here,
-`toDecimal(scaleOnInfinitePrecision: 10)` in [decimal](https://pub.dev/packages/decimal),
-`divide(..., scale: 10)` in [big_decimal](https://pub.dev/packages/big_decimal).
+`toDecimal(scaleOnInfinitePrecision: 10)` in
+[decimal](https://pub.dev/packages/decimal), `divide(..., scale: 10)` in
+[big_decimal](https://pub.dev/packages/big_decimal).
 [fixed](https://pub.dev/packages/fixed) has no argument for it at all: its
 `operator /` gives the quotient the wider of the two scales, so it is the
 divisor that carries the ten digits. The packages that cannot do it at all show
@@ -778,13 +787,13 @@ divisor that carries the ten digits. The packages that cannot do it at all show
 ##### unrepresentable-divide-wide
 
 The same rounding to ten digits, with money divided by money instead of by
-three. Dividing by three keeps the exact dividend and the answer the same width,
-so a dividend that outgrows a machine word gives an answer that outgrows it too
-and the case cannot be put on a bench at all. A money-sized divisor pulls the
-answer back under four thousand while the exact dividend, carrying ten more
-digits, runs up to `8.9e22` — past what a machine word holds, while the values
-and the answers both stay inside one. Carrying that middle somewhere is what the
-row measures.
+three. Dividing by three keeps the exact dividend and the answer the same
+width, so a dividend that outgrows a machine word gives an answer that outgrows
+it too and the case cannot be put on a bench at all. A money-sized divisor
+pulls the answer back under four thousand while the exact dividend, carrying
+ten more digits, runs up to `8.9e22` — past what a machine word holds, while
+the values and the answers both stay inside one. Carrying that middle somewhere
+is what the row measures.
 
 ### [decimal](https://pub.dev/packages/decimal) vs [denary](https://pub.dev/packages/denary)
 
@@ -797,16 +806,16 @@ the inside. And it's pretty much the same feature set. I thought the same about
 performance — the table above says otherwise.
 
 But actually the decision to write my own
-[denary](https://pub.dev/packages/denary) was not
-only influenced by the poor (at the time) performance of
-[decimal](https://pub.dev/packages/decimal). There was another reason. For my
-task I needed a lightweight decimal, which needed a regular `int` instead of
-`BigInt` to store values under the hood. My values fit even in int32. These are
-the results of training: geoposition, distance, altitude gain, pace, heart
-rate, cadence, power. As an old generation programmer, it's morally hard for me
-to waste resources in places where it's not necessary. Especially I expect
-a large amount of data and calculations with them. And I was surprised to find
-no ready-made solution on [pub.dev](https://pub.dev).
+[denary](https://pub.dev/packages/denary) was not only influenced by the poor
+(at the time) performance of [decimal](https://pub.dev/packages/decimal). There
+was another reason. For my task I needed a lightweight decimal, which needed a
+regular `int` instead of `BigInt` to store values under the hood. My values fit
+even in int32. These are the results of training: geoposition, distance,
+altitude gain, pace, heart rate, cadence, power. As an old generation
+programmer, it's morally hard for me to waste resources in places where it's
+not necessary. Especially I expect a large amount of data and calculations with
+them. And I was surprised to find no ready-made solution on
+[pub.dev](https://pub.dev).
 
 So, `Decimal` was not originally the main purpose of the package. The main goal
 was `ShortDecimal`. `Decimal` was just a natural evolution of the package.
@@ -931,11 +940,11 @@ print(r2); // 6, kept as base 6, scale 0
 `Decimal`, of course, could after each operation bring the value to normal,
 i.e. to (base: 6, scale: 0), but this is additional time, which in most cases
 is unnecessary. And where `BigInt` is used, there is no practical need for
-this: there is not too much difference between (base: 6, scale: 0) and
-(base: 60000000000, scale: 10). But in the case of `int` we can reach overflow
-very quickly. For example, it is enough to multiply 1.0 by 1.0, i.e.
-(base: 10, scale: 1) by (base: 10, scale: 1), only 18 times to go beyond the
-`int` boundary. Even though it's only 1!
+this: there is not too much difference between (base: 6, scale: 0) and (base:
+60000000000, scale: 10). But in the case of `int` we can reach overflow very
+quickly. For example, it is enough to multiply 1.0 by 1.0, i.e. (base: 10,
+scale: 1) by (base: 10, scale: 1), only 18 times to go beyond the `int`
+boundary. Even though it's only 1!
 
 ```dart
 var a = Decimal.parse('1.0');
@@ -994,7 +1003,8 @@ it is the slower of the two, nor on `compare`, where the two come out level:
 | unrepresentable-divide      |  (▼308x) 122.338 µs |   (▼10x) 4.184 µs |  (▼9x) 3.708 µs |      ★ 0.397 µs |
 | unrepresentable-divide-wide |   (▼90x) 283.447 µs |          4.456 µs |        3.966 µs |      ★ 3.123 µs |
 
-*For a description of the tests, see [Package performance](#package-performance).*
+*For a description of the tests, see
+[Package performance](#package-performance).*
 
 `Decimal` and `ShortDecimal` run the same algorithms, so the distance between
 the two right-hand columns is the distance between `BigInt` and `int`: about
